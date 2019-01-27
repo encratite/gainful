@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Gainful</title>
+		<script type="module" src="gainful.js"></script>
+		<script type="module">
+			import { Player, Sample } from "./gainful.js";
+			
+			document.addEventListener("DOMContentLoaded", (e) => {
+				const container = document.getElementById("player");
+				const samples = [
+					new Sample("Chords", "audio/chords.mp3"),
+					new Sample("Palm mute", "audio/palm-mute.mp3"),
+				];
+				const player = new Player(samples);
+				player.render(container);
+			});
+		</script>
+	</head>
+	<body>
+		<div id="player"></div>
+	</body>
+</html>
