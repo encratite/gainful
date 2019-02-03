@@ -6,11 +6,11 @@ export class Player {
     playButton: HTMLButtonElement;
     stopButton: HTMLButtonElement;
 
-    samples: Array<Sample>;
+    samples: Sample[];
     samplePromise: Promise<void[]>;
     audioContext: AudioContext;
 
-	constructor(samples: Array<Sample>) {
+	constructor(samples: Sample[]) {
 		this.samples = samples;
 		this.samplePromise = Promise.all<void>(samples.map((sample) => sample.load()));
 	}
@@ -108,8 +108,23 @@ export class Sample {
 	}
 }
 
+export class EffectFactory {
+	name: string;
+	type: () => Effect;
+
+	constructor(name: string, type: () => Effect) {
+		this.name = name;
+		this.type = type;
+	}
+
+	create(): Effect {
+		const effect = this.type();
+		return effect;
+	}
+}
+
 export abstract class Effect {
-	parameters: EffectParameter[];
+	parameters: EffectParameter[] = [];
 
 	abstract process(input: Float32Array[]): Float32Array[];
 
@@ -117,11 +132,7 @@ export abstract class Effect {
 		const table = Dom.createElement<HTMLTableElement>("table", container);
 		for (let parameter of this.parameters) {
 			const row = Dom.createElement<HTMLTableRowElement>("tr", table);
-			const nameCell = Dom.createElement<HTMLTableCellElement>("td", row, {
-				textContent: parameter.name
-			});
-			const parameterCell = Dom.createElement<HTMLTableCellElement>("td", row);
-			parameter.render(parameterCell);
+			parameter.render(row);
 		};
 	}
 }
@@ -144,15 +155,20 @@ export class EffectParameter {
 		this.value = defaultValue;
 	}
 
-	render(container: HTMLElement) {
-		const range = Dom.createElement<HTMLInputElement>("input", container, {
+	render(row: HTMLTableRowElement) {
+		const nameCell = Dom.createElement<HTMLTableCellElement>("td", row, {
+			textContent: this.name
+		});
+		const rangeCell = Dom.createElement<HTMLTableCellElement>("td", row);
+		const range = Dom.createElement<HTMLInputElement>("input", rangeCell, {
 			type: "range",
 			min: this.min,
 			max: this.max,
 			step: this.step,
 			value: this.value
 		});
-		const input = Dom.createElement<HTMLInputElement>("input", container, {
+		const inputCell = Dom.createElement<HTMLTableCellElement>("td", row);
+		const input = Dom.createElement<HTMLInputElement>("input", row, {
 			value: this.value
 		});
 	}
