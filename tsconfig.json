@@ -2,6 +2,13 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "es2015",
-    "sourceMap": true
-  }
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outDir": "scripts"
+  },
+  "include": [
+      "source/*"
+  ]
 }
