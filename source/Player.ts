@@ -1,5 +1,5 @@
-import { Sample } from "./Sample";
-import { Dom } from "./Dom";
+import { Sample } from "./Sample.js";
+import { Dom } from "./Dom.js";
 
 export class Player {
 	container: HTMLElement;

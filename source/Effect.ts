@@ -1,5 +1,5 @@
-import { EffectParameter } from "./EffectParameter";
-import { Dom } from "./Dom";
+import { EffectParameter } from "./EffectParameter.js";
+import { Dom } from "./Dom.js";
 
 export abstract class Effect {
     parameters: EffectParameter[] = [];

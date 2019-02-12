@@ -1,4 +1,4 @@
-import { Dom } from "./Dom";
+import { Dom } from "./Dom.js";
 
 export class EffectParameter {
     name: string;

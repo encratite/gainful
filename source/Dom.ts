@@ -4,7 +4,7 @@ export class Dom {
         parent.appendChild(element);
         for (const name in properties) {
             const descriptor = Object.getOwnPropertyDescriptor(properties, name);
-            Object.defineProperty(element, name, { value: descriptor.value });
+            Object.defineProperty(element, name, { value: descriptor.value, writable: true });
         };
         return element;
     }
