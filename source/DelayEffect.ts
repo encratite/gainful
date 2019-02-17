@@ -35,12 +35,8 @@ export class DelayEffect extends Effect {
         if (input.length < this.delayBuffer.length) {
             this.delayBuffer.copyWithin(0, input.length);
         }
-        for (let i = 0; i < input.length; i++) {
-            const delayBufferIndex = this.delayBuffer.length - input.length + i;
-            if (delayBufferIndex >= 0 && delayBufferIndex < this.delayBuffer.length) {
-                this.delayBuffer[delayBufferIndex] = input[i];
-            }
-        }
+        const offset = Math.max(this.delayBuffer.length - input.length, 0);
+        this.delayBuffer.set(input, offset);
         return output;
     }
 }

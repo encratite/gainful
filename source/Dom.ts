@@ -11,8 +11,17 @@ export class Dom {
     static createButton(label: string, container: HTMLElement, handler: () => void): HTMLButtonElement {
         const button = Dom.createElement<HTMLButtonElement>("button", container, {
             textContent: label,
-            disabled: true,
             onclick: (e: MouseEvent) => handler(),
+        });
+        return button;
+    }
+
+    static createIconButton(className: string, container: HTMLElement, handler: () => void): HTMLButtonElement {
+        const button = Dom.createElement<HTMLButtonElement>("button", container, {
+            onclick: (e: MouseEvent) => handler(),
+        });
+        const icon = Dom.createElement<HTMLElement>("i", button, {
+            className: "fa fa-" + className
         });
         return button;
     }
