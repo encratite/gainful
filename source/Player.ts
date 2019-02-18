@@ -23,8 +23,10 @@ export class Player {
 	
 	async render(container: HTMLElement) {
 		this.container = container;
-		this.container.classList.add("gainfulPlayer");
-		this.topRow = Dom.createElement<HTMLDivElement>("div", this.container);
+		this.container.classList.add("gainful");
+		this.topRow = Dom.createElement<HTMLDivElement>("div", this.container, {
+			className: "topRow"
+		});
 		this.trackSelect = Dom.createElement<HTMLSelectElement>("select", this.topRow, {
 			disabled: true
 		});
