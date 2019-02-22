@@ -95,7 +95,7 @@ export class Player {
 	}
 
 	showAddEffectMenu(show: boolean) {
-		this.addEffectMenu.style.display = show ? "block" : "none";
+		this.addEffectMenu.style.display = show ? "inline-block" : "none";
 	}
 
 	getCurrentSample(): Sample {
