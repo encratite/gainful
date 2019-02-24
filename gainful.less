@@ -1,35 +1,15 @@
 .gainful {
-    .topRow select {
-        width: 10em;
-    }
-
-    .topRow select, .topRow button {
-        height: 1.5em;
-    }
-
     button {
         margin-left: 0.2em;
     }
 
-    .addEffectMenu {
-        background-color: white;
-        border: 1px solid black;
-        position: relative;
-        left: -1em;
-        top: 0.8em;
+    .menu {
+        display: flex;
+        row-gap: 1em;
+    }
 
-        ul {
-            margin: 0;
-            padding: 0.3em 0.6em 0.3em 0.6em;
-        }
-
-        li {
-            list-style-type: none;
-
-            &:hover {
-                cursor: pointer;
-                text-decoration: underline;
-            }
-        }
+    .samples, .addEffect {
+        display: flex;
+        align-items: stretch;
     }
 }
