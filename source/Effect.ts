@@ -9,10 +9,10 @@ export abstract class Effect {
     abstract process(input: Float32Array): Float32Array;
 
     render(container: HTMLElement) {
-        const table = Dom.createElement<HTMLTableElement>("table", container);
+        const table = Dom.element<HTMLTableElement>("table", container);
         const parameters = this.getParameters();
         for (let parameter of parameters) {
-            const row = Dom.createElement<HTMLTableRowElement>("tr", table);
+            const row = Dom.element<HTMLTableRowElement>("tr", table);
             parameter.render(row);
         };
     }

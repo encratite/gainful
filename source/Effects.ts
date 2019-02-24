@@ -12,6 +12,16 @@ export class Effects {
     static forEach(callback: (name: string, constructor: () => Effect) => void) {
         this.effects.forEach(tuple => callback(tuple[0], tuple[1]));
     }
+
+    static create(name: string): Effect {
+        const tuple = this.effects.find(tuple => tuple[0] === name);
+        if (tuple == null) {
+            throw new Error("Unable to find effect.");
+        }
+        const effectConstructor = tuple[1];
+        const effect = effectConstructor();
+        return effect;
+    }
 }
 
 Effects.register("Delay", () => new DelayEffect());

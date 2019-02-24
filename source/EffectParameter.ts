@@ -19,20 +19,11 @@ export class EffectParameter {
     }
 
     render(row: HTMLTableRowElement) {
-        const nameCell = Dom.createElement<HTMLTableCellElement>("td", row, {
-            textContent: this.name
-        });
-        const rangeCell = Dom.createElement<HTMLTableCellElement>("td", row);
-        const range = Dom.createElement<HTMLInputElement>("input", rangeCell, {
-            type: "range",
-            min: this.min,
-            max: this.max,
-            step: this.step,
-            value: this.value
-        });
-        const inputCell = Dom.createElement<HTMLTableCellElement>("td", row);
-        const input = Dom.createElement<HTMLInputElement>("input", row, {
-            value: this.value
-        });
+        const range = Dom.element<HTMLInputElement>("input", row);
+        range.type = "range";
+        range.min = this.min.toString();
+        range.max = this.max.toString();
+        range.step = this.step.toString();
+        range.value = this.value.toString();
     }
 }

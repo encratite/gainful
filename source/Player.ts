@@ -5,12 +5,16 @@ import { Effects } from "./Effects.js";
 
 export class Player {
 	container: HTMLElement;
+
+	menuBox: HTMLDivElement;
 	
-	topRow: HTMLDivElement;
+	sampleBox: HTMLDivElement;
 	trackSelect: HTMLSelectElement;
 	playButton: HTMLButtonElement;
 	stopButton: HTMLButtonElement;
-	addEffectMenu: HTMLDivElement;
+
+	addEffectBox: HTMLDivElement;
+	effectList: HTMLSelectElement;
 
 	samples: Sample[];
 	samplePromise: Promise<void[]>;
@@ -24,39 +28,27 @@ export class Player {
 	async render(container: HTMLElement) {
 		this.container = container;
 		this.container.classList.add("gainful");
-		this.topRow = Dom.createElement<HTMLDivElement>("div", this.container, {
-			className: "topRow"
-		});
-		this.trackSelect = Dom.createElement<HTMLSelectElement>("select", this.topRow, {
-			disabled: true
-		});
-		this.playButton = Dom.createIconButton("play", this.topRow, () => this.onPlayButtonClick());
-		this.stopButton = Dom.createIconButton("stop", this.topRow, () => this.onStopButtonClick());
-		Dom.createIconButton("bars", this.topRow, () => this.onOpenEffectMenuButtonClick());
+		this.menuBox = Dom.div(this.container, "menu");
+		this.sampleBox = Dom.div(this.menuBox, "samples");
+		this.trackSelect = Dom.select(this.sampleBox);
+		this.trackSelect.disabled = true;
+		this.playButton = Dom.iconButton("play", this.sampleBox, () => this.onPlayButtonClick());
+		this.stopButton = Dom.iconButton("stop", this.sampleBox, () => this.onStopButtonClick());
 		this.renderEffectMenu();
 		await this.samplePromise;
 		this.samples.forEach((sample) => {
-			const option = Dom.createElement<HTMLOptionElement>("option", this.trackSelect, {
-				value: sample.path,
-				textContent: sample.name
-			});
-			this.trackSelect.appendChild(option);
+			Dom.option(sample.name, sample.path, this.trackSelect);
 		});
 		this.setPlayState(false);
 	}
 
 	renderEffectMenu() {
-		this.addEffectMenu = Dom.createElement<HTMLDivElement>("div", this.topRow, {
-			className: "addEffectMenu"
-		});
-		this.addEffectMenu.style.display = "none";
-		const effectList = Dom.createElement<HTMLUListElement>("ul", this.addEffectMenu);
+		this.addEffectBox = Dom.div(this.menuBox, "addEffect");
+		this.effectList = Dom.select(this.addEffectBox);
 		Effects.forEach((name: string, effectConstructor: () => Effect) => {
-			Dom.createElement<HTMLLIElement>("li", effectList, {
-				textContent: name,
-				onclick: () => this.onAddEffectClick(name, effectConstructor)
-			});
+			Dom.option(name, name, this.effectList);
 		});
+		Dom.button("Add", this.addEffectBox, () => this.onAddEffectClick());
 	}
 
 	async initializeContext() {
@@ -79,12 +71,8 @@ export class Player {
 		sample.stop();
 	}
 
-	onOpenEffectMenuButtonClick() {
-		this.showAddEffectMenu(true);
-	}
-
-	onAddEffectClick(name: string, effectConstructor: () => Effect) {
-		const effect = effectConstructor();
+	onAddEffectClick() {
+		const effect = Effects.create(this.effectList.value);
 		throw new Error("Not implemented.");
 	}
 
@@ -92,10 +80,6 @@ export class Player {
 		this.trackSelect.disabled = playing;
 		this.playButton.disabled = playing;
 		this.stopButton.disabled = !playing;
-	}
-
-	showAddEffectMenu(show: boolean) {
-		this.addEffectMenu.style.display = show ? "inline-block" : "none";
 	}
 
 	getCurrentSample(): Sample {
