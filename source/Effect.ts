@@ -4,6 +4,7 @@ import { Dom } from "./Dom.js";
 export abstract class Effect {
     audioContext: AudioContext;
 
+    abstract getName(): string;
     abstract getParameters(): EffectParameter[];
     abstract onParameterChange(): void;
     abstract process(input: Float32Array): Float32Array;
@@ -14,7 +15,7 @@ export abstract class Effect {
         for (let parameter of parameters) {
             const row = Dom.element<HTMLTableRowElement>("tr", table);
             parameter.render(row);
-        };
+        }
     }
 
     setAudioContext(audioContext: AudioContext) {

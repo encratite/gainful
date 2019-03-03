@@ -16,9 +16,13 @@ export class Player {
 	addEffectBox: HTMLDivElement;
 	effectList: HTMLSelectElement;
 
+	effectBox: HTMLDivElement;
+
 	samples: Sample[];
 	samplePromise: Promise<void[]>;
 	audioContext: AudioContext;
+
+	effects: Effect[] = [];
 
 	constructor(samples: Sample[]) {
 		this.samples = samples;
@@ -29,17 +33,22 @@ export class Player {
 		this.container = container;
 		this.container.classList.add("gainful");
 		this.menuBox = Dom.div(this.container, "menu");
+		this.renderSampleMenu();
+		this.renderEffectMenu();
+		this.effectBox = Dom.div(this.container, "effects");
+		await this.samplePromise;
+		for (const sample of this.samples) {
+			Dom.option(sample.name, sample.path, this.trackSelect);
+		}
+		this.setPlayState(false);
+	}
+
+	renderSampleMenu() {
 		this.sampleBox = Dom.div(this.menuBox, "samples");
 		this.trackSelect = Dom.select(this.sampleBox);
 		this.trackSelect.disabled = true;
 		this.playButton = Dom.iconButton("play", this.sampleBox, () => this.onPlayButtonClick());
 		this.stopButton = Dom.iconButton("stop", this.sampleBox, () => this.onStopButtonClick());
-		this.renderEffectMenu();
-		await this.samplePromise;
-		this.samples.forEach((sample) => {
-			Dom.option(sample.name, sample.path, this.trackSelect);
-		});
-		this.setPlayState(false);
 	}
 
 	renderEffectMenu() {
@@ -49,6 +58,15 @@ export class Player {
 			Dom.option(name, name, this.effectList);
 		});
 		Dom.button("Add", this.addEffectBox, () => this.onAddEffectClick());
+	}
+
+	renderEffects() {
+		while (this.effectBox.hasChildNodes()) {
+			this.effectBox.removeChild(this.effectBox.firstChild);
+		}
+		for (const effect of this.effects) {
+			effect.render(this.effectBox);
+		}
 	}
 
 	async initializeContext() {
@@ -73,7 +91,9 @@ export class Player {
 
 	onAddEffectClick() {
 		const effect = Effects.create(this.effectList.value);
-		throw new Error("Not implemented.");
+		effect.setAudioContext(this.audioContext);
+		this.effects.push(effect);
+		this.renderEffects();
 	}
 
 	setPlayState(playing: boolean) {

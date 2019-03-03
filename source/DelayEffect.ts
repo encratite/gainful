@@ -8,6 +8,10 @@ export class DelayEffect extends Effect {
 
     delayBuffer: Float32Array;
 
+    getName(): string {
+        return "Delay";
+    }
+
     getParameters(): EffectParameter[] {
         const parameters = [
             this.dryVolume,
